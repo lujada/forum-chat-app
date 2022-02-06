@@ -1,0 +1,7 @@
+<h1>General chatter</h1>
+<hr>
+
+{% for post in posts %}
+<a href="/General/{{ post[1] }}">{{ post[0] }}</a>
+<hr>
+{% endfor %}
