@@ -5,6 +5,7 @@ from flask import Flask
 from flask import redirect, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from os import getenv
+from werkzeug.security import check_password_hash, generate_password_hash
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -23,14 +24,14 @@ def new():
 
 @app.route("/General")
 def General():
-    result = db.session.execute("SELECT title, id FROM posts WHERE area_id=1")
+    result = db.session.execute("SELECT id, title, created FROM posts WHERE area_id=1 ORDER BY id DESC")
     posts = result.fetchall()
     print(posts)
     return render_template("General.html", posts=posts)
 
 @app.route("/General/<int:id>")
 def topic(id):
-    sql = "SELECT content FROM messages WHERE post_id=:id"
+    sql = "SELECT content, created FROM messages WHERE post_id=:id ORDER BY id DESC"
     result = db.session.execute(sql, {"id":id})
     messages = result.fetchall()
     

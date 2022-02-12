@@ -1,6 +1,8 @@
 <h1>{{ title }}</h1>
 
 {% for message in messages %}
-{{ message.content }}
+<p>{{ message.content }}</p>
+<br>
+<i><small>Posted at: {{ message.created.strftime("%Y-%m-%d %H:%M:%S") }}</small></i>
 <hr>
 {% endfor %}

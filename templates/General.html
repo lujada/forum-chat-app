@@ -2,6 +2,7 @@
 <hr>
 
 {% for post in posts %}
-<a href="/General/{{ post[1] }}">{{ post[0] }}</a>
+<h2><a href="/General/{{ post.id }}">{{ post.title }}</a></h2>
+<p><small>Created at: {{ post.created.strftime("%Y-%m-%d %H:%M:%S") }}</small></p>
 <hr>
 {% endfor %}
