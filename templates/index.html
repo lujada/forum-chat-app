@@ -1,5 +1,25 @@
 <h1>Forum</h1>
 <hr>
+
+{% if session.username %}
+<b>Logged in as <i>{{ session.username }}</i></b><br>
+<a href="/logout">Log out</a><br><br><hr>
+{% else %}
+<form action="/login" method="POST">
+    <p>Username:<br>
+    <input type="text" name="username"></p>
+
+    <p>Password:<br>
+    <input type="password" name="password"></p>
+    
+    <input type="submit" value="Login">
+    <p>Not an user yet? Click here to create an account!</p>
+<a href="/newuser">Create user</a>
+    <br><hr>
+</form>
+{% endif %}
+
+<br>
 {% for area in areas %}
 <a href={{area[0]}}>{{area[0]}}</a>
 <hr>

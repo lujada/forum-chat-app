@@ -1,4 +1,12 @@
-<h1>{{ title }}</h1>
+<h1>{{ title.title }}</h1>
+
+<p>Reply: </p>
+<form action="reply" method="POST">
+    <textarea name="content" rows="5" cols="40"></textarea> 
+    <input type="hidden" name="id" value="{{ title.id }}">
+    <br>
+    <input type="submit" value="Post"></p>
+</form>
 
 {% for message in messages %}
 <p>{{ message.content }}</p>

@@ -5,12 +5,13 @@
 
 <b>Create a new post:</b>
 
-<form action="General/new_post" method="POST">
+<form action="/new_post" method="POST">
     <p>Title: <br>
     <textarea name="title" rows="1" cols="40"></textarea></p>
     <p>Message:<br>
     <textarea name="content" rows="5" cols="40"></textarea> 
     <br>
+    <input type="hidden" name="name" value="{{ name }}">
     <input type="submit" value="Post"></p>
     </form>
 
