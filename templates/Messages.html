@@ -1,5 +1,6 @@
 <h1>{{ title.title }}</h1>
 
+{% if session.username %}
 <p>Reply: </p>
 <form action="reply" method="POST">
     <textarea name="content" rows="5" cols="40"></textarea> 
@@ -7,10 +8,13 @@
     <br>
     <input type="submit" value="Post"></p>
 </form>
+{% else %}
+<p>Login to leave a reply</p>
+{% endif %}
 
 {% for message in messages %}
 <p>{{ message.content }}</p>
 <br>
-<i><small>Posted at: {{ message.created.strftime("%Y-%m-%d %H:%M:%S") }}</small></i>
+<i><small>Posted at: {{ message.created.strftime("%Y-%m-%d %H:%M:%S") }} by <b>{{ message.username }}</b></small></i>
 <hr>
 {% endfor %}

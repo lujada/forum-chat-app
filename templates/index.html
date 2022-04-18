@@ -1,6 +1,10 @@
 <h1>Forum</h1>
 <hr>
 
+{% if session.login_message %}
+<b>{{ session.login_message }}</b>
+{% endif %}
+
 {% if session.username %}
 <b>Logged in as <i>{{ session.username }}</i></b><br>
 <a href="/logout">Log out</a><br><br><hr>
