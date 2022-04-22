@@ -17,7 +17,7 @@ db = SQLAlchemy(app)
 
 @app.route("/")
 def index():
-    result = db.session.execute("SELECT area FROM areas ORDER BY id")
+    result = db.session.execute("SELECT area, id FROM areas ORDER BY id")
     areas = result.fetchall()
     return render_template("index.html", areas=areas) 
 
@@ -72,19 +72,19 @@ def logout():
 def new_user():
     return render_template("new_user.html")
 
-@app.route("/<string:name>")
-def areas(name:str):
-    sql = "SELECT id FROM areas WHERE area=:name"
-    result = db.session.execute(sql, {"name":name})
-    area_id = result.fetchone()[0]
+@app.route("/area/<int:id>")
+def areas(id):
+    sql = "SELECT id, area FROM areas WHERE id=:id"
+    result = db.session.execute(sql, {"id":id})
+    area = result.fetchone()
 
     sql = "SELECT posts.id, posts.title, posts.created, users.username FROM posts, users WHERE area_id=:area_id AND posts.user_id = users.id ORDER BY id DESC"
-    result = db.session.execute(sql, {"area_id":area_id})
+    result = db.session.execute(sql, {"area_id":area.id})
     posts = result.fetchall()
-    return render_template("Areas.html", posts=posts, name=name)
+    return render_template("Areas.html", posts=posts, name=area.area)
 
-@app.route("/<string:name>/<int:id>")
-def topic(name:str, id):
+@app.route("/topic/<int:id>")
+def topic(id):
     sql = "SELECT messages.content, messages.created, users.username FROM messages, users WHERE post_id=:id AND messages.user_id = users.id ORDER BY messages.id DESC"
     result = db.session.execute(sql, {"id":id})
     messages = result.fetchall()
@@ -94,9 +94,6 @@ def topic(name:str, id):
     result = db.session.execute(sql, {"id":id})
     title = result.fetchone()
     return render_template("Messages.html", messages=messages, title=title)
-
-
-
 
 
 @app.route("/new_post", methods=["POST"])
@@ -132,11 +129,35 @@ def reply(name:str):
 
     return redirect(f"/{name}/{post_id}")
 
+@app.route("/admins")
+def admins():
+    result = db.session.execute("SELECT area, id FROM areas ORDER BY id")
+    areas = result.fetchall()
+    return render_template("Admins.html", areas=areas)
+
+@app.route("/delete/area/<int:id>")
+def delete_area(id):
+    sql = "DELETE FROM areas WHERE id=:id"
+    db.session.execute(sql, {"id":id})
+    db.session.commit()
+    return redirect("/")
+
 
 @app.route("/send", methods=["POST"])
 def send():
     content = request.form["content"]
     sql = "INSERT INTO messages (content) VALUES (:content)"
     db.session.execute(sql, {"content":content})
+    db.session.commit()
+    return redirect("/")
+
+@app.route("/new_area", methods=["POST"])
+def add_area():
+    content = request.form["content"]
+    hidden = request.form["hidden"]
+    print(content, "content", hidden, "hidden")
+
+    sql = "INSERT INTO areas (area, hidden) VALUES (:content, :hidden)"
+    db.session.execute(sql, {"content": content, "hidden":hidden})
     db.session.commit()
     return redirect("/")

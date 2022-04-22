@@ -23,8 +23,16 @@
 </form>
 {% endif %}
 
-<br>
+
 {% for area in areas %}
-<a href={{area[0]}}>{{area[0]}}</a>
+<a href="/area/{{area.id}}"">{{area.area}}</a>
 <hr>
 {% endfor %}
+<br><br><br><br>
+
+
+{% if session.admin == true %}
+<hr>
+<a href="/admins">Add or delete an existing area (for admins only)</a>
+<hr>
+{% endif %}

@@ -1,0 +1,22 @@
+<h1>Super secret admin area</h1>
+
+<b>Delete an existing area:</b>
+
+{% for area in areas %}
+<hr>
+<form action="/delete/area/{{ area.id }}">
+    {{ area.area }}
+    <input type="submit" value="Delete">
+</form>
+{% endfor %}
+<hr>
+<br>
+Add a new area: 
+
+<form action="/new_area" method="POST">
+    <input type="text" name="content"> 
+    Only for admins?
+    <input type="radio" name="hidden" id="value1" value="t"> Yes </input>
+    <input type="radio" name="hidden" id="value2" value="f" checked> No </input>
+    <input type="submit" value="Add area">
+</form>

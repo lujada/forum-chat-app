@@ -1,9 +1,9 @@
-<h1>General chatter</h1>
+<h1>{{ name }}</h1>
 <hr>
 
 {% if session.username %}
 
-<b>Create a new post:</b>
+<b>Create a new topic:</b>
 
 <form action="/new_post" method="POST">
     <p>Title: <br>
@@ -22,7 +22,7 @@ Login to create threads
 {% endif %}
 
 {% for post in posts %}
-<h2><a href="/General/{{ post.id }}">{{ post.title }}</a></h2>
+<h2><a href="/topic/{{ post.id }}">{{ post.title }}</a></h2>
 <p><small>Created at: {{ post.created.strftime("%Y-%m-%d %H:%M:%S") }} by <b>{{ post.username }}</b></small></p>
 <hr>
 {% endfor %}
