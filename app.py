@@ -17,7 +17,7 @@ db = SQLAlchemy(app)
 
 @app.route("/")
 def index():
-    result = db.session.execute("SELECT area, id FROM areas ORDER BY id")
+    result = db.session.execute("SELECT area, id, hidden FROM areas ORDER BY id")
     areas = result.fetchall()
     return render_template("index.html", areas=areas) 
 
@@ -78,17 +78,16 @@ def areas(id):
     result = db.session.execute(sql, {"id":id})
     area = result.fetchone()
 
-    sql = "SELECT posts.id, posts.title, posts.created, users.username FROM posts, users WHERE area_id=:area_id AND posts.user_id = users.id ORDER BY id DESC"
+    sql = "SELECT posts.id, posts.title, posts.created, posts.user_id, users.username FROM posts, users WHERE area_id=:area_id AND posts.user_id = users.id ORDER BY id DESC"
     result = db.session.execute(sql, {"area_id":area.id})
     posts = result.fetchall()
     return render_template("Areas.html", posts=posts, name=area.area)
 
 @app.route("/topic/<int:id>")
 def topic(id):
-    sql = "SELECT messages.content, messages.created, users.username FROM messages, users WHERE post_id=:id AND messages.user_id = users.id ORDER BY messages.id DESC"
+    sql = "SELECT messages.id, messages.content, messages.created, messages.user_id, users.username FROM messages, users WHERE post_id=:id AND messages.user_id = users.id ORDER BY messages.id DESC"
     result = db.session.execute(sql, {"id":id})
     messages = result.fetchall()
-    print(messages, 'msgs')
     
     sql = "SELECT title, id FROM posts WHERE id=:id"
     result = db.session.execute(sql, {"id":id})
@@ -142,6 +141,20 @@ def delete_area(id):
     db.session.commit()
     return redirect("/")
 
+@app.route("/delete/post/<int:id>")
+def delete_post(id):
+    sql = "UPDATE posts SET title = NULL WHERE id=:id"
+    db.session.execute(sql, {"id":id})
+    db.session.commit()
+    return redirect("/")
+
+@app.route("/delete/messages/<int:id>")
+def delete_message(id):
+    sql = "UPDATE messages SET content = NULL WHERE id=:id"
+    db.session.execute(sql, {"id":id})
+    db.session.commit()
+    return redirect("/")
+
 
 @app.route("/send", methods=["POST"])
 def send():
@@ -155,7 +168,6 @@ def send():
 def add_area():
     content = request.form["content"]
     hidden = request.form["hidden"]
-    print(content, "content", hidden, "hidden")
 
     sql = "INSERT INTO areas (area, hidden) VALUES (:content, :hidden)"
     db.session.execute(sql, {"content": content, "hidden":hidden})

@@ -13,8 +13,14 @@
 {% endif %}
 
 {% for message in messages %}
+{% if message.content != None %}
 <p>{{ message.content }}</p>
 <br>
 <i><small>Posted at: {{ message.created.strftime("%Y-%m-%d %H:%M:%S") }} by <b>{{ message.username }}</b></small></i>
+{% if session.userid == message.user_id %}
+<form action="/delete/messages/{{ message.id }}">
+    <input type="submit" value="Delete">
+{% endif %}
 <hr>
+{% endif %}
 {% endfor %}

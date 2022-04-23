@@ -22,7 +22,15 @@ Login to create threads
 {% endif %}
 
 {% for post in posts %}
+{% if post.title != None %}
 <h2><a href="/topic/{{ post.id }}">{{ post.title }}</a></h2>
-<p><small>Created at: {{ post.created.strftime("%Y-%m-%d %H:%M:%S") }} by <b>{{ post.username }}</b></small></p>
+<p><small>Created at: {{ post.created.strftime("%Y-%m-%d %H:%M:%S") }} by <b>{{ post.username }}</b></small>
+</p>
+{% endif %}
+{% if session.userid == post.user_id %}
+<form action="/delete/post/{{ post.id }}">
+    <input type="submit" value="Delete">
+</form>
+{% endif %}
 <hr>
 {% endfor %}

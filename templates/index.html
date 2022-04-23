@@ -25,14 +25,24 @@
 
 
 {% for area in areas %}
+{% if area.hidden == False %}
 <a href="/area/{{area.id}}"">{{area.area}}</a>
 <hr>
+{% endif %}
 {% endfor %}
-<br><br><br><br>
 
 
 {% if session.admin == true %}
+<br><br><br>
+<b>For admins only:</b><br><br>
+{% for area in areas %}
+{% if area.hidden == True %}
+<a href="/area/{{area.id}}"">{{area.area}}</a>
 <hr>
-<a href="/admins">Add or delete an existing area (for admins only)</a>
+{% endif %}
+{% endfor %}
+
+<hr>
+<a href="/admins">Add or delete an existing area</a>
 <hr>
 {% endif %}
