@@ -2,7 +2,7 @@
 {% block title %}Areas{% endblock %}
 {% block content %}
 
-<h1>{{ name }}</h1>
+<h1>{{ area.area }}</h1>
 <hr>
 
 {% if session.username %}
@@ -15,7 +15,7 @@
     <p>Message:<br>
     <textarea name="content" rows="5" cols="40"></textarea> 
     <br>
-    <input type="hidden" name="name" value="{{ name }}">
+    <input type="hidden" name="name" value="{{ area.area }}">
     <input type="submit" value="Post"></p>
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     </form>
@@ -63,6 +63,7 @@ The creator of the thread can add a link to a photo to the discussion here:
 <form action="/save_image_link" method="POST">
     <input type="text" name="link">
     <input type="hidden" name="post_id" value="{{ post.id }}">
+    <input type="hidden" name="area_id" value="{{ area.id }}">
     <input type="submit" value="Save link">
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 </form>
