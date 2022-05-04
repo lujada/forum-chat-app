@@ -1,15 +1,16 @@
-<h1>Forum</h1>
-<hr>
+{% extends "layout.html" %}
+{% block title %}Index{% endblock %}
+{% block content %}
 
 {% if session.login_message %}
 <b>{{ session.login_message }}</b>
 {% endif %}
 
 {% if session.username %}
-<b>Logged in as <i>{{ session.username }}</i></b><br>
-<a href="/logout">Log out</a><br><br><hr>
+<hr>
+<p class="center">Logged in as <i>{{ session.username }}</i><br><hr>
 {% else %}
-<form action="/login" method="POST">
+<form action="/login" method="POST" class="center">
     <p>Username:<br>
     <input type="text" name="username"></p>
 
@@ -17,32 +18,31 @@
     <input type="password" name="password"></p>
     
     <input type="submit" value="Login">
-    <p>Not an user yet? Click here to create an account!</p>
-<a href="/newuser">Create user</a>
-    <br><hr>
+    <p>Not an user yet? Click <a href="/newuser">here</a> to create an account!</p>
 </form>
+<hr>
 {% endif %}
 
+<b>Discussion areas:</b>
+<br><br>
 
 {% for area in areas %}
 {% if area.hidden == False %}
-<a href="/area/{{area.id}}"">{{area.area}}</a>
+<a href="/area/{{area.id}}" class="link">{{area.area}}</a>
 <hr>
 {% endif %}
 {% endfor %}
-
 
 {% if session.admin == true %}
 <br><br><br>
-<b>For admins only:</b><br><br>
+<h3>For admins only:</h3><br>
 {% for area in areas %}
 {% if area.hidden == True %}
-<a href="/area/{{area.id}}"">{{area.area}}</a>
+<a href="/area/{{area.id}}" class="admin">{{area.area}}</a>
 <hr>
 {% endif %}
 {% endfor %}
-
-<hr>
-<a href="/admins">Add or delete an existing area</a>
-<hr>
+<a href="/admins" class="addelete">Add or delete an existing area</a>
 {% endif %}
+
+{% endblock %}

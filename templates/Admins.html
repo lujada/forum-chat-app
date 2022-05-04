@@ -1,3 +1,8 @@
+{% extends "layout.html" %}
+{% block title %}Admin area{% endblock %}
+{% block content %}
+<div class="admin">
+
 <h1>Super secret admin area</h1>
 
 <b>Delete an existing area:</b>
@@ -5,18 +10,21 @@
 {% for area in areas %}
 <hr>
 <form action="/delete/area/{{ area.id }}">
-    {{ area.area }}
+            {{ area.area }}
     <input type="submit" value="Delete">
 </form>
 {% endfor %}
 <hr>
 <br>
-Add a new area: 
+<h3>Add a new area: </h3>
 
-<form action="/new_area" method="POST">
+<form action="/new_area" method="POST" class="blue">
     <input type="text" name="content"> 
     Only for admins?
     <input type="radio" name="hidden" id="value1" value="t"> Yes </input>
     <input type="radio" name="hidden" id="value2" value="f" checked> No </input>
     <input type="submit" value="Add area">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 </form>
+</div>
+{% endblock %}

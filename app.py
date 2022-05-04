@@ -5,7 +5,9 @@ from flask import Flask
 from flask import redirect, render_template, request, session
 from flask_sqlalchemy import SQLAlchemy
 from os import getenv
+from sqlalchemy import null
 from werkzeug.security import check_password_hash, generate_password_hash
+import secrets
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -40,13 +42,23 @@ def login():
         else:
             session["username"] = username
             session["userid"] = user.id
+            print(type(session["userid"]), 'useridtype')
+            print(session["userid"], 'id login')
             session["admin"] = user.admin
             session["login_message"] = " "
+            session["csrf_token"] = secrets.token_hex(16)
             return redirect("/")
 
 @app.route("/createuser", methods=["POST"])
 def create_user():
     username = request.form["username"]
+    sql = "SELECT username from users WHERE username=:username"
+    result = db.session.execute(sql, {"username":username})
+    unique = result.fetchall()
+    if unique != []:
+        session["login_message"] = "The username is already taken!"
+        return redirect("/")
+
     password = request.form["password"]
     admin = request.form["admin"]
     hash_value = generate_password_hash(password)
@@ -57,7 +69,10 @@ def create_user():
     session["login_message"] = " "
     session["username"] = username
     session["userid"] = user_id
-    session["admin"] = admin
+    print(type(session["userid"]), 'userid')
+    print(session["userid"], 'id create')
+    session["admin"] = bool(admin)
+    session["csrf_token"] = secrets.token_hex(16)
     return redirect("/")
 
 @app.route("/logout")
@@ -66,6 +81,7 @@ def logout():
     del session["userid"]
     del session["admin"]
     session["login_message"] = " "
+    session["csrf_token"] = ""  
     return redirect("/")
 
 @app.route("/newuser")
@@ -92,13 +108,23 @@ def topic(id):
     sql = "SELECT title, id FROM posts WHERE id=:id"
     result = db.session.execute(sql, {"id":id})
     title = result.fetchone()
-    return render_template("Messages.html", messages=messages, title=title)
+
+    sql = "SELECT link FROM photos WHERE topic_id=:id"
+    result = db.session.execute(sql, {"id":id})
+    image = result.fetchone()
+    return render_template("Messages.html", messages=messages, title=title, image=image)
 
 
 @app.route("/new_post", methods=["POST"])
 def new_post():
+    if session["csrf_token"] != request.form["csrf_token"]:
+        return render_template("error.html", error="An error occurred")
     title = request.form["title"] 
+    if len(title) > 50:
+        return render_template("error.html", error="The title should not exceed 50 characters")
     content = request.form["content"]
+    if len(content) > 5000:
+        return render_template("error.html", error="Your message is too long! (max 5000 characters)")
     name = request.form["name"]
     sql = "SELECT id FROM areas WHERE area=:name"
     result = db.session.execute(sql, {"name":name})
@@ -114,10 +140,12 @@ def new_post():
     db.session.execute(sql, {"post_id":returned_id, "content":content, "user_id":user_id})
     db.session.commit()
     
-    return redirect(f"/{name}")
+    return redirect(f"/area/{area_id}")
 
 @app.route("/<string:name>/reply", methods=["POST"])
 def reply(name:str):
+    if session["csrf_token"] != request.form["csrf_token"]:
+        return render_template("error.html", error="An error occurred")
     post_id = request.form["id"] 
     content = request.form["content"]
     user_id = session["userid"]
@@ -155,9 +183,21 @@ def delete_message(id):
     db.session.commit()
     return redirect("/")
 
+@app.route("/save_image_link", methods=["POST"])
+def add_photo():
+    link = request.form["link"]
+    post_id = request.form["post_id"]
+    sql = "INSERT INTO photos  (link, topic_id) VALUES (:link, :post_id)"
+    db.session.execute(sql, {"link":link, "post_id":post_id})
+    db.session.commit()
+    return redirect("/")
+
+
 
 @app.route("/send", methods=["POST"])
 def send():
+    if session["csrf_token"] != request.form["csrf_token"]:
+        return render_template("error.html", error="An error occurred")
     content = request.form["content"]
     sql = "INSERT INTO messages (content) VALUES (:content)"
     db.session.execute(sql, {"content":content})
@@ -173,3 +213,7 @@ def add_area():
     db.session.execute(sql, {"content": content, "hidden":hidden})
     db.session.commit()
     return redirect("/")
+
+@app.route("/search")
+def search():
+    return render_template("search.html") 

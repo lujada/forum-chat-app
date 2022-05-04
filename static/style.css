@@ -1,0 +1,61 @@
+body {background-color: #000000;
+    font-family:Arial, Helvetica, sans-serif;
+}
+body {color: #9dff00;}
+
+h1 {
+    text-align: center;
+    font-size: 3em;
+}
+h2 {
+    color: #ca00ca;
+    text-align: center;
+    font-size: 1.5em;
+}
+
+h3 {
+    color: #ca00ca;
+    font-size: 1.5em;
+}
+
+hr {
+    height: 1px;
+    border: none;
+    background-color: #ca00ca;
+
+}
+
+.link {
+    color: white;
+}
+
+.center {
+    text-align: center;
+}
+
+.centerwhite {
+    text-align: center;
+    color: white;
+}
+
+.admin {
+    color: red;
+}
+
+.addelete {
+    color: rgb(89, 0, 255);
+    font-size: 1.5em;
+}
+
+.blue {
+    color: #ca00ca;
+}
+
+.message {
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.newtopic {
+    font-size: 1.2;
+    text-align: center;
+}

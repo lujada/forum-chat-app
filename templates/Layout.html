@@ -1,0 +1,14 @@
+<!doctype html>
+<title>Forum Chat App {% block title %}{% endblock %}</title>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css')}}">
+<h1>Forum Chat App</h1>
+<h2>Talk About Things & Stuff</h2>
+<hr>
+<div class="centerwhite">
+<a href="/">Front page & Log in</a><br>
+{% if session.username %}
+<br>
+<a href="/logout">Log out</a>
+{% endif %}
+</div>
+{% block content %}{% endblock %}

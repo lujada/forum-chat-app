@@ -1,11 +1,15 @@
+{% extends "layout.html" %}
+{% block title %}Areas{% endblock %}
+{% block content %}
+
 <h1>{{ name }}</h1>
 <hr>
 
 {% if session.username %}
 
-<b>Create a new topic:</b>
+<div class="newtopic">Create a new topic:</div>
 
-<form action="/new_post" method="POST">
+<form action="/new_post" method="POST" onsubmit="return check(this)" class="center">
     <p>Title: <br>
     <textarea name="title" rows="1" cols="40"></textarea></p>
     <p>Message:<br>
@@ -13,24 +17,66 @@
     <br>
     <input type="hidden" name="name" value="{{ name }}">
     <input type="submit" value="Post"></p>
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     </form>
+<script>
+function check(form) {
+    if (form.title.value.length > 50) {
+        alert("The title should not exceed 50 characters");
+        return false;
+    }
+    if (form.content.value.length > 5000) {
+        alert("Your message is too long! (Max 5000 characters)");
+        return false;
+    }
+    return true;
+}
+</script>
 
 {% else %}
-
-Login to create threads
+<div class="center">
+<a href="/">Login</a> to create threads
+</div>
 
 {% endif %}
 
 {% for post in posts %}
 {% if post.title != None %}
-<h2><a href="/topic/{{ post.id }}">{{ post.title }}</a></h2>
+<hr>
+<a href="/topic/{{ post.id }}" class="link">{{ post.title }}</a>
 <p><small>Created at: {{ post.created.strftime("%Y-%m-%d %H:%M:%S") }} by <b>{{ post.username }}</b></small>
 </p>
-{% endif %}
+
+{% if session.admin == False %}
 {% if session.userid == post.user_id %}
 <form action="/delete/post/{{ post.id }}">
     <input type="submit" value="Delete">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+</form>
+
+{% endif %}
+{% endif %}
+
+{% if session.userid == post.user_id %}
+<br>
+The creator of the thread can add a link to a photo to the discussion here:
+<form action="/save_image_link" method="POST">
+    <input type="text" name="link">
+    <input type="hidden" name="post_id" value="{{ post.id }}">
+    <input type="submit" value="Save link">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 </form>
 {% endif %}
-<hr>
+
+{% if session.admin == True %}
+<form action="/delete/post/{{ post.id }}">
+    <input type="submit" value="Delete">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+</form>
+<br>
+{% endif %}
+{% endif %}
 {% endfor %}
+<hr>
+
+{% endblock %}

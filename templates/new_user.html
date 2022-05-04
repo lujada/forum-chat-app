@@ -1,3 +1,7 @@
+{% extends "layout.html" %}
+{% block title %}Create user{% endblock %}
+{% block content %}
+
 <h1>Create a new account</h1>
 <hr>
 <form action="/createuser" method="POST">
@@ -8,9 +12,11 @@
     <input type="password" name="password"></p>
 
     Admin:<br>
-    <input type="radio" name="admin" id="value1" value="true"> True </input>
-    <input type="radio" name="admin" id="value2" value="false" checked> False </input><br>
+    <input type="radio" name="admin" id="value1" value="True"> True </input>
+    <input type="radio" name="admin" id="value2" value="False" checked> False </input><br>
 
     <input type="submit" value="Create">
     <br><hr>
 </form>
+
+{% endblock %}

@@ -1,20 +1,37 @@
-<h1>{{ title.title }}</h1>
+{% extends "layout.html" %}
+{% block title %}Post{% endblock %}
+{% block content %}
+<hr>
+
+{% if image %}
+<img src="{{image[0]}}">
+<br>
+<p>Image source:<i>{{image[0]}}</i></p>
+{% endif %}
 
 {% if session.username %}
-<p>Reply: </p>
-<form action="reply" method="POST">
+<p class="center">Reply: </p>
+<form action="reply" method="POST" class="center">
     <textarea name="content" rows="5" cols="40"></textarea> 
     <input type="hidden" name="id" value="{{ title.id }}">
     <br>
     <input type="submit" value="Post"></p>
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 </form>
+<hr>
 {% else %}
-<p>Login to leave a reply</p>
+<div class="center">
+    <hr>
+<a href="/">Login</a> to leave a reply
+<hr>
+</div>
 {% endif %}
+
+<h2>{{ title.title }}</h2>
 
 {% for message in messages %}
 {% if message.content != None %}
-<p>{{ message.content }}</p>
+<p class="message">{{ message.content }}</p>
 <br>
 <i><small>Posted at: {{ message.created.strftime("%Y-%m-%d %H:%M:%S") }} by <b>{{ message.username }}</b></small></i>
 {% if session.userid == message.user_id %}
@@ -24,3 +41,5 @@
 <hr>
 {% endif %}
 {% endfor %}
+
+{% endblock %}
