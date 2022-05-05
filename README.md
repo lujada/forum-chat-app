@@ -1,11 +1,19 @@
-# forum-chat-app
-Forum chatting app using python, flask and PostreSQL
+# Forum Chat App
+This is a forum app that uses python, flask and PostreSQL.
 
-This app is a forum-like website where users can post new topics and chat.
+You can test the app here: https://forum-chat-app.herokuapp.com/
 
-The features include:
+Start by creating a new user and decide whether the user will have admin rights or not.
+
+# The features include:
 
 - Different topics where you can chat with other users (General, music, other etc.)
-- Under the topics you can join an existing discussion or create a new one
-- The user has the possibility to search for words that appear in any topic
-- Admins have a secret area where they can create new discussion only visible to other admins
+- Under the topics you can write a message to an existing discussion or create a new one
+- After creating a new thread you can then add a link to a picture that will be shown in the topic.
+- You can delete your own messages and threads
+
+# Admin rights:
+- Hidden area where you can add and remove areas
+- Show and create areas only visible to other admins
+- Delete any thread
+
