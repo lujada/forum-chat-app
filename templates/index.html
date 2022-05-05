@@ -1,3 +1,6 @@
+{% extends "Layout.html" %}
+{% block title %}Index{% endblock %}
+{% block content %}
 
 {% if session.login_message %}
 <b>{{ session.login_message }}</b>
@@ -41,3 +44,5 @@
 {% endfor %}
 <a href="/admins" class="addelete">Add or delete an existing area</a>
 {% endif %}
+
+{% endblock %}
