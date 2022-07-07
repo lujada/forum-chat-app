@@ -51,7 +51,6 @@ function check(form) {
 {% if session.userid == post.user_id %}
 <form action="/delete/post/{{ post.id }}">
     <input type="submit" value="Delete">
-    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 </form>
 
 {% endif %}
@@ -72,7 +71,6 @@ The creator of the thread can add a link to a photo to the discussion here:
 {% if session.admin == True %}
 <form action="/delete/post/{{ post.id }}">
     <input type="submit" value="Delete">
-    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 </form>
 <br>
 {% endif %}

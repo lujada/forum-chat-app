@@ -5,10 +5,26 @@
 
 <h1>{{ title.title }}</h1>
 
-{% if image %}
-<img src="{{image[0]}}" width="500" height="500">
+{% if image.link %}
+<img src="{{image.link}}" width="500" height="500">
 <br>
-<p>Image source:<i>{{image[0]}}</i></p>
+<p>Image source:<i>{{image.link}}</i></p>
+
+{% if session.admin == False %}
+{% if session.userid == title.user_id%}
+
+<form action="/delete/picture/{{ image.id }}">
+    <input type="submit" value="Delete">
+</form>
+
+{% endif %}
+{% endif %}
+
+{% if session.admin == True %}
+<form action="/delete/picture/{{ image.id }}">
+    <input type="submit" value="Delete">
+</form>
+{% endif %}
 {% endif %}
 
 {% if session.username %}
@@ -35,12 +51,23 @@
 <p class="message">{{ message.content }}</p>
 <br>
 <i><small>Posted at: {{ message.created.strftime("%Y-%m-%d %H:%M:%S") }} by <b>{{ message.username }}</b></small></i>
+{% if session.admin == false %}
 {% if session.userid == message.user_id %}
 <form action="/delete/messages/{{ message.id }}">
     <input type="submit" value="Delete">
 {% endif %}
+{% endif %}
+
+{% if session.admin == True %}
+<form action="/delete/messages/{{ message.id }}">
+    <input type="submit" value="Delete">
+</form>
+<br>
+{% endif %}
+
 <hr>
 {% endif %}
+
 {% endfor %}
 
 {% endblock %}

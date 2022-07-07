@@ -12,4 +12,5 @@ app.secret_key = getenv("SECRET_KEY")
 
 app.logger.addHandler(logging.StreamHandler(sys.stdout))
 app.logger.setLevel(logging.ERROR)
+
 import routes
