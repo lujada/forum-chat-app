@@ -1,8 +1,6 @@
 # Forum Chat App
 This is a forum app that uses python, flask and PostreSQL
 
-You can test the app here: https://forum-chat-app.herokuapp.com/
-
 Start by creating a new user and decide whether the user will have admin rights or not
 
 # The features include:
